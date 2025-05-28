@@ -19,8 +19,8 @@ router.get("/:puuid", async (req, res) => {
 
     if (!masteriesResponse.ok) {
       const errorText = await masteriesResponse.text();
-      console.error("Erreur Riot ID:", errorText);
-      throw new Error(`Erreur Riot ID: ${masteriesResponse.status}`);
+      console.error("Erreur Masteries response:", errorText);
+      throw new Error(`Erreur Masteries response: ${masteriesResponse.status}`);
     }
 
     // 2 - Récupération des données des masteries en limitant à 3 champions
