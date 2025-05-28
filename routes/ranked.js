@@ -19,8 +19,8 @@ router.get("/:puuid", async (req, res) => {
 
     if (!rankedResponse.ok) {
       const errorText = await rankedResponse.text();
-      console.error("Erreur Masteries response:", errorText);
-      throw new Error(`Erreur Masteries response: ${rankedResponse.status}`);
+      console.error("Erreur Ranked response:", errorText);
+      throw new Error(`Erreur Ranked response: ${rankedResponse.status}`);
     }
 
     const rankedData = await rankedResponse.json(); // Récupération des données JSON
