@@ -12,7 +12,7 @@ router.get("/:puuid", async (req, res) => {
       return res.status(400).json({ error: "API KEY is required" });
     }
 
-    // 1 - Récupération des masteries du joueur à partir du PUUID
+    // --------------- Recovery of the player’s masteries ------------------ //
     const masteriesResponse = await fetch(
       `https://euw1.api.riotgames.com/lol/champion-mastery/v4/champion-masteries/by-puuid/${puuid}/?api_key=${RIOT_API_KEY}`
     );
@@ -23,9 +23,8 @@ router.get("/:puuid", async (req, res) => {
       throw new Error(`Erreur Masteries response: ${masteriesResponse.status}`);
     }
 
-    // 2 - Récupération des données des masteries en limitant à 3 champions
-
-    const masteriesJson = await masteriesResponse.json(); // Récupération des données JSON
+    // ------------- Recovery of the masteries data limiting to 3 champions ------------- //
+    const masteriesJson = await masteriesResponse.json();
 
     const masteriesData = masteriesJson
       ? masteriesJson.slice(0, 3).map((mastery) => ({
@@ -37,9 +36,9 @@ router.get("/:puuid", async (req, res) => {
 
     res.json({ masteries: masteriesData });
 
-    // Capture des erreurs
+    // Catch errors
   } catch (error) {
-    console.error("Erreur backend :", error.message);
+    console.error("Error backend:", error.message);
     res.status(500).json({
       error: error.message,
     });
