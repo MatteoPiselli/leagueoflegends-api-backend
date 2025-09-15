@@ -24,9 +24,9 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
-app.use("/summoner", summonersRouter);
+app.use("/api/summoner", summonersRouter);
 app.use("/masteries", masteriesRouter);
 app.use("/matchs", matchsRouter);
-app.use("/ranked", rankedRouter);
+app.use("/api/ranked", rankedRouter);
 
 module.exports = app;
