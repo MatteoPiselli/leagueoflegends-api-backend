@@ -6,6 +6,7 @@ const summonerSchema = mongoose.Schema({
   puuid: String,
   level: Number,
   profileIconId: Number,
+  updatedAt: { type: Date, default: Date.now },
 });
 
 const Summoner = mongoose.model("summoners", summonerSchema);
