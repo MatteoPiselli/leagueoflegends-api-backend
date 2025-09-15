@@ -30,7 +30,7 @@ exports.searchSummoner = async (req, res) => {
     }
 
     // 4. Send info to client
-    res.json({ riotId: riotIdData, summoner: summonerData, dbSummoner });
+    res.json({ dbSummoner });
   } catch (error) {
     // Centralized error handling
     console.error("Error backend :", error.message);
