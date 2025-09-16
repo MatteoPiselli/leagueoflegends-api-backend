@@ -43,6 +43,7 @@ exports.getRanked = async (req, res) => {
             wins: flex.wins || 0,
             losses: flex.losses || 0,
           },
+          updatedAt: new Date(),
         },
       },
       // Create if not exists, return the new document
