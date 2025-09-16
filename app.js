@@ -25,7 +25,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 app.use("/", indexRouter);
 app.use("/api/summoner", summonersRouter);
-app.use("/masteries", masteriesRouter);
+app.use("/api/masteries", masteriesRouter);
 app.use("/matchs", matchsRouter);
 app.use("/api/ranked", rankedRouter);
 
