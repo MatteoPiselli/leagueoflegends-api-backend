@@ -18,8 +18,7 @@ exports.getRanked = async (req, res) => {
 
     // 2. Check if we have ranked data in database
     const existingRanked = await Ranked.findOne({ summoner: dbSummoner._id });
-
-    if (existingRanked.length) {
+    if (existingRanked) {
       return res.json({ ranked: existingRanked });
     }
 
