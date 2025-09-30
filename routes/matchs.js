@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const matchController = require("../controllers/matchController");
+const matchController = require("../controllers/match");
 
 /* ----------------- Get Matchs History ------------- */
 router.get("/:puuid", matchController.getMatchHistory);
