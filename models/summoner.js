@@ -9,6 +9,8 @@ const summonerSchema = mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
+summonerSchema.index({ puuid: 1 });
+
 const Summoner = mongoose.model("summoners", summonerSchema);
 
 module.exports = Summoner;
