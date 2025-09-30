@@ -20,6 +20,8 @@ const rankedSchema = mongoose.Schema({
   },
 });
 
+rankedSchema.index({ summoner: 1 });
+
 const Ranked = mongoose.model("rankeds", rankedSchema);
 
 module.exports = Ranked;
