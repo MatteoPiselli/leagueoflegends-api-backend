@@ -32,8 +32,8 @@ exports.searchSummoner = async (req, res) => {
     // 4. Send info to client
     res.json({ summoner: dbSummoner });
   } catch (error) {
-    // Centralized error handling
-    console.error("Error backend :", error.message);
-    res.status(500).json({ error: error.message });
+    const statusCode = error.statusCode || 500;
+    console.error("Summoner Error:", error.message, "Status:", statusCode);
+    res.status(statusCode).json({ error: error.message });
   }
 };
