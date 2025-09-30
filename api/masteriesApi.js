@@ -10,7 +10,11 @@ async function getMasteriesByPuuid(puuid) {
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Masteries error: ${response.status} - ${errorText}`);
+    const error = new Error(
+      `Masteries error: ${response.status} - ${errorText}`
+    );
+    error.statusCode = response.status;
+    throw error;
   }
 
   // ------------- Recovery of the masteries data limiting to 3 champions ------------- //
