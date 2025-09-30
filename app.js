@@ -11,6 +11,7 @@ var summonersRouter = require("./routes/summoner");
 var masteriesRouter = require("./routes/masteries");
 var matchsRouter = require("./routes/matchs");
 var rankedRouter = require("./routes/ranked");
+var championsRouter = require("./routes/champions");
 
 var app = express();
 
@@ -26,7 +27,8 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use("/", indexRouter);
 app.use("/api/summoner", summonersRouter);
 app.use("/api/masteries", masteriesRouter);
-app.use("/matchs", matchsRouter);
+app.use("/api/matchs", matchsRouter);
 app.use("/api/ranked", rankedRouter);
+app.use("/api/champions", championsRouter);
 
 module.exports = app;
