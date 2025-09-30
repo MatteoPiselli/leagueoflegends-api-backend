@@ -9,7 +9,11 @@ async function getRankedByPuuid(puuid) {
   );
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Ranked response error: ${response.status} - ${errorText}`);
+    const error = new Error(
+      `Ranked response error: ${response.status} - ${errorText}`
+    );
+    error.statusCode = response.status;
+    throw error;
   }
   return response.json();
 }
