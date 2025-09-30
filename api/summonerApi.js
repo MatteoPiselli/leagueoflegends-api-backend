@@ -9,7 +9,9 @@ async function getRiotId(username, tagline) {
   );
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Riot ID error: ${response.status} - ${errorText}`);
+    const error = new Error(`Riot ID error: ${response.status} - ${errorText}`);
+    error.statusCode = response.status;
+    throw error;
   }
   return response.json();
 }
@@ -21,7 +23,11 @@ async function getSummonerByPuuid(puuid) {
   );
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`Summoner info error: ${response.status} - ${errorText}`);
+    const error = new Error(
+      `Summoner info error: ${response.status} - ${errorText}`
+    );
+    error.statusCode = response.status;
+    throw error;
   }
   return response.json();
 }
