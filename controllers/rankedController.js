@@ -10,22 +10,29 @@ exports.getRanked = async (req, res) => {
   const { puuid } = req.params;
 
   try {
-    // 1. Get ranked data from Riot API
-    const rankedData = await getRankedByPuuid(puuid);
-
-    // 2. Find Summoner by PUUID
+    // 1. Find Summoner by PUUID
     const dbSummoner = await Summoner.findOne({ puuid });
     if (!dbSummoner) {
       return res.status(404).json({ error: "Summoner not found" });
     }
 
-    // 3. Extract SoloDuo and Flex data from API response
+    // 2. Check if we have ranked data in database
+    const existingRanked = await Ranked.findOne({ summoner: dbSummoner._id });
+
+    if (existingRanked.length) {
+      return res.json({ ranked: existingRanked });
+    }
+
+    // 3. Get ranked data from Riot API if not in database
+    const rankedData = await getRankedByPuuid(puuid);
+
+    // 4. Extract SoloDuo and Flex data from API response
     const soloDuo =
       rankedData.find((q) => q.queueType === "RANKED_SOLO_5x5") || {};
     const flex = rankedData.find((q) => q.queueType === "RANKED_FLEX_SR") || {};
 
-    // 4. Save the ranked data in MongoDB
-    await Ranked.findOneAndUpdate(
+    // 5. Save/Update the ranked data in MongoDB
+    const updatedRanked = await Ranked.findOneAndUpdate(
       { summoner: dbSummoner._id },
       {
         $set: {
@@ -35,6 +42,7 @@ exports.getRanked = async (req, res) => {
             lp: soloDuo.leaguePoints || 0,
             wins: soloDuo.wins || 0,
             losses: soloDuo.losses || 0,
+            updatedAt: new Date(),
           },
           flex: {
             tier: flex.tier || "Unranked",
@@ -42,6 +50,7 @@ exports.getRanked = async (req, res) => {
             lp: flex.leaguePoints || 0,
             wins: flex.wins || 0,
             losses: flex.losses || 0,
+            updatedAt: new Date(),
           },
           updatedAt: new Date(),
         },
@@ -50,14 +59,11 @@ exports.getRanked = async (req, res) => {
       { upsert: true, new: true }
     );
 
-    // 5. Get ranked data from database
-    const ranked = await Ranked.findOne({ summoner: dbSummoner._id });
-
     // Send ranked data to client
-    res.json({ ranked });
+    res.json({ ranked: updatedRanked });
   } catch (error) {
-    // Centralized error handling
-    console.error("Error backend :", error.message);
-    res.status(500).json({ error: error.message });
+    const statusCode = error.statusCode || 500;
+    console.error("Error Ranked:", error.message, "Status:", statusCode);
+    res.status(statusCode).json({ error: error.message });
   }
 };
