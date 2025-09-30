@@ -8,6 +8,8 @@ const masterySchema = mongoose.Schema({
   updatedAt: { type: Date, default: Date.now },
 });
 
+masterySchema.index({ summoner: 1 });
+
 const Mastery = mongoose.model("masteries", masterySchema);
 
 module.exports = Mastery;
