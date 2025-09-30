@@ -43,8 +43,8 @@ exports.getMasteries = async (req, res) => {
     // Send masteries data to client
     res.json({ masteries });
   } catch (error) {
-    // Centralized error handling
-    console.error("Error backend :", error.message);
-    res.status(500).json({ error: error.message });
+    const statusCode = error.statusCode || 500;
+    console.error("Masteries Error:", error.message, "Status:", statusCode);
+    res.status(statusCode).json({ error: error.message });
   }
 };
