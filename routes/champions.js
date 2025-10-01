@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const championController = require("../controllers/championController");
+const championController = require("../controllers/champion");
 
-/* ----------------- Get Champion Stats ------------- */
-router.get("/stats/:puuid", championController.getChampionStats);
+/* ----------- Get Champion Stats for Top 5 Champions ----------- */
+router.get("/:puuid/stats", championController.getChampionStats);
 
 module.exports = router;
