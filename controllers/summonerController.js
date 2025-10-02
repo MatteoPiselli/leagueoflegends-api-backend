@@ -4,6 +4,7 @@ const { getRiotId, getSummonerByPuuid } = require("../api/summonerApi");
 /**
  * Search for a player using Riot API and return info.
  * Save the player in MongoDB if not already present.
+ * Update profileIconId and level if the player is already present.
  */
 exports.searchSummoner = async (req, res) => {
   const { username, tagline } = req.params;
@@ -16,18 +17,23 @@ exports.searchSummoner = async (req, res) => {
     // 2. Get player info from PUUID using utility function
     const summonerData = await getSummonerByPuuid(puuid);
 
-    // 3. Save player in MongoDB if not already present
-    let dbSummoner = await Summoner.findOne({ puuid });
-    if (!dbSummoner) {
-      dbSummoner = new Summoner({
-        username,
-        tagline,
-        puuid,
-        level: summonerData.summonerLevel,
-        profileIconId: summonerData.profileIconId,
-      });
-      await dbSummoner.save();
-    }
+    // 3. Create or update player in MongoDB
+    const dbSummoner = await Summoner.findOneAndUpdate(
+      { puuid },
+      {
+        $set: {
+          username,
+          tagline,
+          level: summonerData.summonerLevel,
+          profileIconId: summonerData.profileIconId,
+          updatedAt: new Date(),
+        },
+        $setOnInsert: {
+          puuid,
+        },
+      },
+      { new: true, upsert: true }
+    );
 
     // 4. Send info to client
     res.json({ summoner: dbSummoner });
