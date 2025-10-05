@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const rankedSchema = mongoose.Schema({
+const rankedSchema = new mongoose.Schema({
   summoner: { type: mongoose.Schema.Types.ObjectId, ref: "summoners" },
   soloDuo: {
     tier: String,

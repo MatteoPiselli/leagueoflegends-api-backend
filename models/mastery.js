@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const masterySchema = mongoose.Schema({
+const masterySchema = new mongoose.Schema({
   summoner: { type: mongoose.Schema.Types.ObjectId, ref: "summoners" },
   championId: Number,
   championLevel: Number,

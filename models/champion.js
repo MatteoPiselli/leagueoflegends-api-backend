@@ -1,33 +1,29 @@
 const mongoose = require("mongoose");
 
-const championSchema = mongoose.Schema({
-  summoner: { type: mongoose.Schema.Types.ObjectId, ref: "summoners" },
+const championStatSchema = new mongoose.Schema({
   championId: Number,
   championName: String,
-  totalGames: Number,
   winRate: Number,
+  totalGames: Number,
   averageStats: {
+    kda: Number,
     kills: Number,
     deaths: Number,
     assists: Number,
-    kda: Number,
     cs: Number,
+    csPerMinute: Number,
   },
-  recentGames: [
-    {
-      gameCreation: Date,
-      kills: Number,
-      deaths: Number,
-      assists: Number,
-      cs: Number,
-      win: Boolean,
-    },
-  ],
+});
+
+const championStatsSchema = new mongoose.Schema({
+  summoner: { type: mongoose.Schema.Types.ObjectId, ref: "summoners" },
+  queueType: String,
+  championStats: [championStatSchema],
   updatedAt: { type: Date, default: Date.now },
 });
 
-championSchema.index({ summoner: 1 });
+championStatsSchema.index({ summoner: 1, queueType: 1 });
 
-const Champion = mongoose.model("champions", championSchema);
+const Champion = mongoose.model("champions", championStatsSchema);
 
 module.exports = Champion;
