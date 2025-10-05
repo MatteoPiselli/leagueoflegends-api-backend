@@ -8,18 +8,29 @@ const { getMasteriesByPuuid } = require("../api/masteriesApi");
  */
 exports.getMasteries = async (req, res) => {
   const { puuid } = req.params;
+  const { updateClicked } = req.query;
 
   try {
-    // 1. Get masteries data from Riot API
-    const masteriesData = await getMasteriesByPuuid(puuid);
-
-    // 2. Find Summoner by PUUID
+    // 1. Find Summoner by PUUID
     const dbSummoner = await Summoner.findOne({ puuid });
     if (!dbSummoner) {
       return res.status(404).json({ error: "Summoner not found" });
     }
 
-    // 3. Save/Update each mastery in MongoDB
+    // 2. Check if we have masteries data in database (skip if updateClicked is true)
+    if (!updateClicked) {
+      const existingMasteries = await Mastery.find({
+        summoner: dbSummoner._id,
+      });
+      if (existingMasteries.length > 0) {
+        return res.json({ masteries: existingMasteries });
+      }
+    }
+
+    // 3. Get masteries data from Riot API
+    const masteriesData = await getMasteriesByPuuid(puuid);
+
+    // 4. Save/Update each mastery in MongoDB
     const masteries = [];
     for (const masteryData of masteriesData) {
       const savedMastery = await Mastery.findOneAndUpdate(
