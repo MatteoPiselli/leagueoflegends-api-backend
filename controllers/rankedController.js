@@ -8,6 +8,7 @@ const Ranked = require("../models/ranked");
  */
 exports.getRanked = async (req, res) => {
   const { puuid } = req.params;
+  const { updateClicked } = req.query;
 
   try {
     // 1. Find Summoner by PUUID
@@ -16,13 +17,13 @@ exports.getRanked = async (req, res) => {
       return res.status(404).json({ error: "Summoner not found" });
     }
 
-    // 2. Check if we have ranked data in database
+    // 2. Check if we have ranked data in database (skip if updateClicked is true)
     const existingRanked = await Ranked.findOne({ summoner: dbSummoner._id });
-    if (existingRanked) {
+    if (existingRanked && !updateClicked) {
       return res.json({ ranked: existingRanked });
     }
 
-    // 3. Get ranked data from Riot API if not in database
+    // 3. Get ranked data from Riot API
     const rankedData = await getRankedByPuuid(puuid);
 
     // 4. Extract SoloDuo and Flex data from API response
