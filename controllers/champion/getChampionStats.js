@@ -1,11 +1,38 @@
 const { getMatchIds } = require("../../api/championApi");
 const riotBatchFetch = require("./riotBatchFetch");
+const Summoner = require("../../models/summoner");
+const Champion = require("../../models/champion");
 
 module.exports = async (req, res) => {
   const { puuid } = req.params;
-  const { queueType } = req.query;
+  const { queueType, updateClicked } = req.query;
+
   try {
-    // Limit to 100 matches
+    // 1. Find Summoner by PUUID
+    const dbSummoner = await Summoner.findOne({ puuid });
+    if (!dbSummoner) {
+      return res.status(404).json({ error: "Summoner not found" });
+    }
+
+    // 2. Check if we have champion stats in database (skip if updateClicked is true)
+    const existingStats = await Champion.findOne({
+      summoner: dbSummoner._id,
+      queueType: queueType || "all",
+    });
+
+    console.log(
+      "Existing stats found:",
+      !!existingStats,
+      "updateClicked:",
+      updateClicked
+    );
+
+    if (existingStats && !updateClicked) {
+      console.log("Returning cached champion stats");
+      return res.json({ championStats: existingStats.championStats });
+    }
+
+    // 3. Get data from Riot API
     const allMatchIds = await getMatchIds(puuid, 0, 100);
 
     // Get match data with Riot rate limit
@@ -79,7 +106,34 @@ module.exports = async (req, res) => {
       };
     });
 
-    res.json({ championStats: stats });
+    // 4. Save/Update champion stats in MongoDB
+    console.log(
+      "Saving champion stats for summoner:",
+      dbSummoner._id,
+      "queueType:",
+      queueType || "all"
+    );
+    console.log("Stats to save:", stats);
+
+    const updatedChampionStats = await Champion.findOneAndUpdate(
+      {
+        summoner: dbSummoner._id,
+        queueType: queueType || "all",
+      },
+      {
+        $set: {
+          championStats: stats,
+          updatedAt: new Date(),
+        },
+      },
+      // Create if not exists, return the new document
+      { upsert: true, new: true }
+    );
+
+    console.log("Champion stats saved successfully:", updatedChampionStats);
+
+    // Send champion stats to client
+    res.json({ championStats: updatedChampionStats.championStats });
   } catch (error) {
     const statusCode = error.statusCode || 500;
     console.error(
