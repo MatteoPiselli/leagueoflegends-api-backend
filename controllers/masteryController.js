@@ -1,5 +1,5 @@
-const Summoner = require("../models/summoner");
-const Mastery = require("../models/mastery");
+const Summoner = require("../database/models/summoner");
+const Mastery = require("../database/models/mastery");
 const { getMasteriesByPuuid } = require("../api/masteriesApi");
 
 /**

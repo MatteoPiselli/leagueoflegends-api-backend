@@ -1,4 +1,4 @@
-const Summoner = require("../models/summoner");
+const Summoner = require("../database/models/summoner");
 const { getRiotId, getSummonerByPuuid } = require("../api/summonerApi");
 
 /**
