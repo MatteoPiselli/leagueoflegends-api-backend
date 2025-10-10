@@ -1,4 +1,4 @@
-const Match = require("../../models/match");
+const Match = require("../../database/models/match");
 const { getMatchHistory } = require("../../api/matchApi");
 
 module.exports = async (req, res) => {

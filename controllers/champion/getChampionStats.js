@@ -1,7 +1,7 @@
 const { getMatchIds } = require("../../api/championApi");
 const riotBatchFetch = require("./riotBatchFetch");
-const Summoner = require("../../models/summoner");
-const Champion = require("../../models/champion");
+const Summoner = require("../../database/models/summoner");
+const Champion = require("../../database/models/champion");
 
 module.exports = async (req, res) => {
   const { puuid } = req.params;
