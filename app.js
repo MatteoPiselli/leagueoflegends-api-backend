@@ -1,5 +1,5 @@
 require("dotenv").config();
-require("./config/db");
+require("./database/connection");
 
 var express = require("express");
 var path = require("path");
