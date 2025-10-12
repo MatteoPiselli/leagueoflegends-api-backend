@@ -34,10 +34,7 @@ async function getMatchData(matchId) {
   return response.json();
 }
 
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
 module.exports = {
   getMatchIds,
   getMatchData,
-  delay,
 };
