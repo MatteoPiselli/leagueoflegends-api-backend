@@ -7,6 +7,9 @@ module.exports = async (req, res) => {
   const { puuid } = req.params;
   const { queueType, updateClicked } = req.query;
 
+  // Default to Normal Draft (400) if no queueType specified
+  const targetQueueType = queueType || "400";
+
   try {
     // 1. Find Summoner by PUUID
     const dbSummoner = await Summoner.findOne({ puuid });
@@ -17,18 +20,10 @@ module.exports = async (req, res) => {
     // 2. Check if we have champion stats in database (skip if updateClicked is true)
     const existingStats = await Champion.findOne({
       summoner: dbSummoner._id,
-      queueType: queueType || "all",
+      queueType: targetQueueType,
     });
 
-    console.log(
-      "Existing stats found:",
-      !!existingStats,
-      "updateClicked:",
-      updateClicked
-    );
-
     if (existingStats && !updateClicked) {
-      console.log("Returning cached champion stats");
       return res.json({ championStats: existingStats.championStats });
     }
 
@@ -36,23 +31,30 @@ module.exports = async (req, res) => {
     const allMatchIds = await getMatchIds(puuid, 0, 100);
 
     // Get match data with Riot rate limit
-    const matches = await riotBatchFetch(allMatchIds, puuid);
+    const matches = await riotBatchFetch(allMatchIds);
 
-    // Filter player games and by queue type
+    // Parse targetQueueType
+    const parsedQueueType = Number(targetQueueType);
+
+    // Filter player games by queue type (default: Normal Draft = 400)
     const playerGames = matches
-      .map((match) => {
-        if (queueType && match.info?.queueId != queueType) return null;
-        const p = match.info?.participants?.find((x) => x.puuid === puuid);
-        return p
-          ? {
-              ...p,
-              win: p.win,
-              queueId: match.info?.queueId,
-              gameDuration: match.info?.gameDuration,
-            }
-          : null;
+      .filter((match) => {
+        const info = match?.info;
+        if (!info || !Array.isArray(info.participants)) return false;
+        // Filter by specific queue type
+        if (info.queueId !== parsedQueueType) return false;
+        return info.participants.some((x) => x.puuid === puuid);
       })
-      .filter(Boolean);
+      .map((match) => {
+        const info = match.info;
+        const p = info.participants.find((x) => x.puuid === puuid);
+        return {
+          ...p,
+          win: p.win,
+          queueId: info.queueId,
+          gameDuration: info.gameDuration,
+        };
+      });
 
     // Count games per champion
     const championCounts = {};
@@ -107,18 +109,10 @@ module.exports = async (req, res) => {
     });
 
     // 4. Save/Update champion stats in MongoDB
-    console.log(
-      "Saving champion stats for summoner:",
-      dbSummoner._id,
-      "queueType:",
-      queueType || "all"
-    );
-    console.log("Stats to save:", stats);
-
     const updatedChampionStats = await Champion.findOneAndUpdate(
       {
         summoner: dbSummoner._id,
-        queueType: queueType || "all",
+        queueType: targetQueueType,
       },
       {
         $set: {
@@ -129,8 +123,6 @@ module.exports = async (req, res) => {
       // Create if not exists, return the new document
       { upsert: true, new: true }
     );
-
-    console.log("Champion stats saved successfully:", updatedChampionStats);
 
     // Send champion stats to client
     res.json({ championStats: updatedChampionStats.championStats });
