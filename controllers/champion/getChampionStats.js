@@ -56,6 +56,26 @@ module.exports = async (req, res) => {
         };
       });
 
+    // Check if we have any games for this queue type
+    if (playerGames.length === 0) {
+      // Save empty stats to avoid repeated API calls
+      await Champion.findOneAndUpdate(
+        {
+          summoner: dbSummoner._id,
+          queueType: targetQueueType,
+        },
+        {
+          $set: {
+            championStats: [],
+            updatedAt: new Date(),
+          },
+        },
+        { upsert: true, new: true }
+      );
+
+      return res.json({ championStats: [] });
+    }
+
     // Count games per champion
     const championCounts = {};
     playerGames.forEach((game) => {
