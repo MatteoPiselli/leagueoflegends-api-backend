@@ -8,20 +8,17 @@ const { getRiotId, getSummonerByPuuid } = require("../api/summonerApi");
  */
 exports.searchSummoner = async (req, res) => {
   const { username, tagline } = req.params;
-  const { updateClicked } = req.query;
 
   try {
-    // 1. Get PUUID from Riot ID using utility function
+    // 1. Check if we have summoner in database first
+    const existingSummoner = await Summoner.findOne({ username, tagline });
+    if (existingSummoner) {
+      return res.json({ summoner: existingSummoner });
+    }
+
+    // 2. Get PUUID from Riot ID using utility function
     const riotIdData = await getRiotId(username, tagline);
     const puuid = riotIdData.puuid;
-
-    // 2. Check if we have summoner in database first (skip if updateClicked is true)
-    if (!updateClicked) {
-      const existingSummoner = await Summoner.findOne({ puuid });
-      if (existingSummoner) {
-        return res.json({ summoner: existingSummoner });
-      }
-    }
 
     // 3. Get player info from PUUID using utility function
     const summonerData = await getSummonerByPuuid(puuid);
