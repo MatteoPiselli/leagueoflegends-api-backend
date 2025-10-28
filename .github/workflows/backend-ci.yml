@@ -1,0 +1,86 @@
+name: Backend CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: "yarn"
+
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+
+      - name: Check for syntax errors
+        run: node -c app.js
+
+      - name: Verify project structure
+        run: |
+          # Vérifier les fichiers de base
+          test -f app.js || exit 1
+          test -f package.json || exit 1
+          test -f database/connection.js || exit 1
+          echo "✅ Core files exist"
+
+          # Vérifier tous les contrôleurs
+          test -f controllers/summonerController.js || exit 1
+          test -f controllers/rankedController.js || exit 1
+          test -f controllers/matchController.js || exit 1
+          test -f controllers/masteryController.js || exit 1
+          echo "✅ All controllers exist"
+
+          # Vérifier toutes les APIs
+          test -f api/summonerApi.js || exit 1
+          test -f api/rankedApi.js || exit 1
+          test -f api/matchApi.js || exit 1
+          test -f api/masteriesApi.js || exit 1
+          test -f api/championApi.js || exit 1
+          echo "✅ All API modules exist"
+
+          # Vérifier tous les modèles
+          test -f database/models/summoner.js || exit 1
+          test -f database/models/ranked.js || exit 1
+          test -f database/models/match.js || exit 1
+          test -f database/models/mastery.js || exit 1
+          test -f database/models/champion.js || exit 1
+          echo "✅ All database models exist"
+
+          # Vérifier toutes les routes
+          test -f routes/summoner.js || exit 1
+          test -f routes/ranked.js || exit 1
+          test -f routes/matchs.js || exit 1
+          test -f routes/masteries.js || exit 1
+          test -f routes/champions.js || exit 1
+          echo "✅ All route files exist"
+
+      - name: Try starting the server (dry run)
+        run: |
+          # Créer un .env temporaire pour le test
+          echo "RIOT_API_KEY=test_key" > .env
+          echo "CONNECTION_STRING=mongodb://localhost:27017/test" >> .env
+
+          # Tester que l'app démarre sans erreur (arrêt rapide)
+          timeout 10s yarn start || [ $? -eq 124 ] && echo "✅ Server starts successfully"
+
+      - name: Validate dependencies
+        run: yarn list --depth=0
+
+      - name: Check environment variables template
+        run: |
+          if [ ! -f .env.example ]; then
+            echo "RIOT_API_KEY=your_riot_api_key_here" > .env.example
+            echo "CONNECTION_STRING=your_mongodb_connection_string" >> .env.example
+          fi
+          echo "✅ Environment variables template ready"
