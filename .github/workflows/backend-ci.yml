@@ -29,13 +29,13 @@ jobs:
 
       - name: Verify project structure
         run: |
-          # Vérifier les fichiers de base
+          # Check core files
           test -f app.js || exit 1
           test -f package.json || exit 1
           test -f database/connection.js || exit 1
           echo "✅ Core files exist"
 
-          # Vérifier tous les contrôleurs
+          # Check all controllers
           test -f controllers/summonerController.js || exit 1
           test -f controllers/rankedController.js || exit 1
           test -f controllers/match/index.js || exit 1
@@ -43,7 +43,7 @@ jobs:
           test -f controllers/masteryController.js || exit 1
           echo "✅ All controllers exist"
 
-          # Vérifier toutes les APIs
+          # Check all APIs
           test -f api/summonerApi.js || exit 1
           test -f api/rankedApi.js || exit 1
           test -f api/matchApi.js || exit 1
@@ -51,7 +51,7 @@ jobs:
           test -f api/championApi.js || exit 1
           echo "✅ All API modules exist"
 
-          # Vérifier tous les modèles
+          # Check all models
           test -f database/models/summoner.js || exit 1
           test -f database/models/ranked.js || exit 1
           test -f database/models/match.js || exit 1
@@ -59,7 +59,7 @@ jobs:
           test -f database/models/champion.js || exit 1
           echo "✅ All database models exist"
 
-          # Vérifier toutes les routes
+          # Check all routes
           test -f routes/summoner.js || exit 1
           test -f routes/ranked.js || exit 1
           test -f routes/matchs.js || exit 1
@@ -67,13 +67,13 @@ jobs:
           test -f routes/champions.js || exit 1
           echo "✅ All route files exist"
 
-      - name: Try starting the server (dry run)
+      - name: Try starting the server
         run: |
-          # Créer un .env temporaire pour le test
+          # Create temporary .env file for testing
           echo "RIOT_API_KEY=test_key" > .env
           echo "CONNECTION_STRING=mongodb://localhost:27017/test" >> .env
 
-          # Tester que l'app démarre sans erreur (arrêt rapide)
+          # Test that the app starts without errors (quick shutdown)
           timeout 10s yarn start || [ $? -eq 124 ] && echo "✅ Server starts successfully"
 
       - name: Validate dependencies
