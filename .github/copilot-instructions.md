@@ -22,9 +22,7 @@ This is a **full-stack League of Legends player statistics application** with se
 
 ### Data Flow Architecture
 
-```
-User Search (username#tagline) → Backend gets PUUID → Parallel API calls → MongoDB cache → Frontend hooks
-```
+**User Search** (username + tagline) → **Backend gets PUUID** → **Parallel API calls** → **MongoDB cache** → **Frontend hooks**
 
 ### PUUID-Centric Design
 
