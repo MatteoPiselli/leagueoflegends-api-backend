@@ -1,7 +1,7 @@
-const { getMatchIds } = require("../../api/championApi");
-const riotBatchFetch = require("./riotBatchFetch");
-const Summoner = require("../../database/models/summoner");
-const Champion = require("../../database/models/champion");
+const { getMatchIds } = require("../api/championApi");
+const riotRateLimit = require("../utils/riotRateLimit");
+const Summoner = require("../database/models/summoner");
+const Champion = require("../database/models/champion");
 
 module.exports = async (req, res) => {
   const { puuid } = req.params;
@@ -31,7 +31,7 @@ module.exports = async (req, res) => {
     const allMatchIds = await getMatchIds(puuid, 0, 100);
 
     // Get match data with Riot rate limit
-    const matches = await riotBatchFetch(allMatchIds);
+    const matches = await riotRateLimit(allMatchIds);
 
     // Parse targetQueueType
     const parsedQueueType = Number(targetQueueType);
