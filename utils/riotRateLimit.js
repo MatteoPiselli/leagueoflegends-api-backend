@@ -1,7 +1,7 @@
-const { getMatchData, delay } = require("../../api/championApi");
+const { getMatchData, delay } = require("../api/championApi");
 
 // Helper for Riot API rate limiting
-module.exports = async function riotBatchFetch(matchIds) {
+module.exports = async function riotRateLimit(matchIds) {
   const results = [];
   let batch = [];
   let batchStart = Date.now();
