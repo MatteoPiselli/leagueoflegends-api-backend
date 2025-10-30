@@ -1,4 +1,5 @@
-const { getMatchData, delay } = require("../api/championApi");
+const { getMatchData } = require("../api/championApi");
+const delay = require("../utils/delay");
 
 // Helper for Riot API rate limiting
 module.exports = async function riotRateLimit(matchIds) {
