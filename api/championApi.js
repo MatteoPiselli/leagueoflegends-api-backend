@@ -34,13 +34,7 @@ async function getMatchData(matchId) {
   return response.json();
 }
 
-// Utility function for rate limiting
-async function delay(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
-
 module.exports = {
   getMatchIds,
   getMatchData,
-  delay,
 };
