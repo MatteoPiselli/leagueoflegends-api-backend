@@ -27,6 +27,18 @@ jobs:
       - name: Check for syntax errors
         run: node -c app.js
 
+      - name: Run unit tests
+        run: yarn test
+        env:
+          NODE_ENV: test
+          RIOT_API_KEY: test-api-key
+
+      - name: Run tests with coverage
+        run: yarn test --coverage --watchAll=false
+        env:
+          NODE_ENV: test
+          RIOT_API_KEY: test-api-key
+
       - name: Verify project structure
         run: |
           # Check core files
