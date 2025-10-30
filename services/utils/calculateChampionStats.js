@@ -55,4 +55,4 @@ function calculateChampionStats(playerGames) {
   });
 }
 
-export default calculateChampionStats;
+module.exports = calculateChampionStats;

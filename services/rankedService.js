@@ -1,7 +1,7 @@
 const { getRankedByPuuid } = require("../api/rankedApi");
 const Summoner = require("../database/models/summoner");
 const Ranked = require("../database/models/ranked");
-const formatRankedData = require("./utils/formatRankedData").default;
+const formatRankedData = require("./utils/formatRankedData");
 
 /**
  * Get ranked data for a player using PUUID

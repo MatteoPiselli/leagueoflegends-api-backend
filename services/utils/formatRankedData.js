@@ -29,4 +29,4 @@ function formatRankedData(rankedData) {
   };
 }
 
-export default { formatRankedData };
+module.exports = formatRankedData;
