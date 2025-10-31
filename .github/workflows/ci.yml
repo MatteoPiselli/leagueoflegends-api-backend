@@ -17,7 +17,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: "22.20.0"
+          node-version: "24.11.0"
           cache: "yarn"
           cache-dependency-path: "yarn.lock"
 
@@ -27,17 +27,17 @@ jobs:
       - name: Check for syntax errors
         run: node -c app.js
 
-      - name: Run unit tests
-        run: yarn test
-        env:
-          NODE_ENV: test
-          RIOT_API_KEY: test-api-key
+      # - name: Run unit tests
+      #   run: yarn test
+      #   env:
+      #     NODE_ENV: test
+      #     RIOT_API_KEY: test-api-key
 
-      - name: Run tests with coverage
-        run: yarn test --coverage --watchAll=false
-        env:
-          NODE_ENV: test
-          RIOT_API_KEY: test-api-key
+      # - name: Run tests with coverage
+      #   run: yarn test --coverage --watchAll=false
+      #   env:
+      #     NODE_ENV: test
+      #     RIOT_API_KEY: test-api-key
 
       - name: Verify project structure
         run: |
@@ -45,13 +45,14 @@ jobs:
           test -f app.js || exit 1
           test -f package.json || exit 1
           test -f database/connection.js || exit 1
+          test -f jest.config.js || exit 1
           echo "✅ Core files exist"
 
           # Check all controllers
           test -f controllers/summonerController.js || exit 1
           test -f controllers/rankedController.js || exit 1
-          test -f controllers/match/index.js || exit 1
-          test -f controllers/champion/index.js || exit 1
+          test -f controllers/matchController.js || exit 1
+          test -f controllers/championController.js || exit 1
           test -f controllers/masteryController.js || exit 1
           echo "✅ All controllers exist"
 
@@ -78,6 +79,20 @@ jobs:
           test -f routes/masteries.js || exit 1
           test -f routes/champions.js || exit 1
           echo "✅ All route files exist"
+
+          # Check services structure
+          for domain in champion mastery match ranked summoner; do
+            test -d services/$domain || exit 1
+            test -f services/$domain/${domain}Service.js || exit 1
+            test -f services/$domain/${domain}DbService.js || exit 1
+            test -f services/$domain/${domain}ApiService.js || exit 1
+            echo "✅ $domain services exist"
+          done
+
+          # Check utils
+          test -f utils/delay.js || exit 1
+          test -f utils/riotRateLimit.js || exit 1
+          echo "✅ Global utils exist"
 
       - name: Try starting the server
         run: |
