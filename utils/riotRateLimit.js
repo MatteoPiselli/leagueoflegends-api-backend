@@ -2,7 +2,7 @@ const { getMatchData } = require("../api/championApi");
 const delay = require("../utils/delay");
 
 // Helper for Riot API rate limiting
-module.exports = async function riotRateLimit(matchIds) {
+async function riotRateLimit(matchIds) {
   const results = [];
   let batch = [];
   let batchStart = Date.now();
@@ -24,4 +24,6 @@ module.exports = async function riotRateLimit(matchIds) {
     if (matchIds.length > 100 && (i + 1) % 100 === 0) await delay(120000);
   }
   return results;
-};
+}
+
+module.exports = { riotRateLimit };
