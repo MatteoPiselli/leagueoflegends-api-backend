@@ -1,4 +1,4 @@
-const masteryService = require("../services/masteryService");
+const masteryService = require("../services/mastery/masteryService");
 
 /**
  * Get masteries data for a player

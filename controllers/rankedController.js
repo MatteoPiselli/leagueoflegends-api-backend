@@ -1,4 +1,4 @@
-const rankedService = require("../services/rankedService");
+const rankedService = require("../services/ranked/rankedService");
 
 /**
  * Get ranked data for a player

@@ -1,4 +1,4 @@
-const championService = require("../services/championService");
+const championService = require("../services/champion/championService");
 
 /**
  * Get champion statistics for a player

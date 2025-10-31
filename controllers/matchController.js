@@ -1,4 +1,4 @@
-const matchService = require("../services/matchService");
+const matchService = require("../services/match/matchService");
 
 /**
  * Get detailed information about a specific match

@@ -1,4 +1,4 @@
-const summonerService = require("../services/summonerService");
+const summonerService = require("../services/summoner/summonerService");
 
 /**
  * Search for a player using Riot API and return info
