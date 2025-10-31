@@ -1,8 +1,8 @@
-const { getMatchIds } = require("../api/championApi");
-const riotRateLimit = require("../utils/riotRateLimit");
-const Summoner = require("../database/models/summoner");
-const Champion = require("../database/models/champion");
-const calculateChampionStats = require("./utils/calculateChampionStats");
+const championApiService = require("./championApiService");
+const championDbService = require("./championDbService");
+const { calculateChampionStats } = require("./utils/calculateChampionStats");
+const { riotRateLimit } = require("../../utils/riotRateLimit");
+const Summoner = require("../../database/models/summoner");
 
 /**
  * Get champion statistics for a player
@@ -10,6 +10,10 @@ const calculateChampionStats = require("./utils/calculateChampionStats");
  * @param {string} queueType - Queue type (default: "400" for Normal Draft)
  * @param {boolean} forceUpdate - Whether to force update from Riot API
  * @returns {Object} Champion statistics
+ */
+
+/**
+ * Orchestrates fetching champion stats for a player
  */
 const getChampionStats = async (
   puuid,
@@ -26,23 +30,18 @@ const getChampionStats = async (
 
   // 2. Check if we have champion stats in database (skip if forceUpdate is true)
   if (!forceUpdate) {
-    const existingStats = await Champion.findOne({
-      summoner: dbSummoner._id,
-      queueType: queueType,
-    });
-
+    const existingStats = await championDbService.findChampionStats(
+      dbSummoner._id,
+      queueType
+    );
     if (existingStats) {
       return { championStats: existingStats.championStats };
     }
   }
 
   // 3. Get data from Riot API
-  const allMatchIds = await getMatchIds(puuid, 0, 100);
-
-  // Get match data with Riot rate limit
+  const allMatchIds = await championApiService.fetchMatchIds(puuid, 0, 100);
   const matches = await riotRateLimit(allMatchIds);
-
-  // Parse targetQueueType
   const parsedQueueType = Number(queueType);
 
   // Filter player games by queue type
@@ -50,7 +49,6 @@ const getChampionStats = async (
     .filter((match) => {
       const info = match?.info;
       if (!info || !Array.isArray(info.participants)) return false;
-      // Filter by specific queue type
       if (info.queueId !== parsedQueueType) return false;
       return info.participants.some((x) => x.puuid === puuid);
     })
@@ -65,23 +63,9 @@ const getChampionStats = async (
       };
     });
 
-  // Check if we have any games for this queue type
+  // Check if we dont have any games for this queue type
   if (playerGames.length === 0) {
-    // Save empty stats to avoid repeated API calls
-    await Champion.findOneAndUpdate(
-      {
-        summoner: dbSummoner._id,
-        queueType: queueType,
-      },
-      {
-        $set: {
-          championStats: [],
-          updatedAt: new Date(),
-        },
-      },
-      { upsert: true, new: true }
-    );
-
+    await championDbService.saveChampionStats(dbSummoner._id, queueType, []);
     return { championStats: [] };
   }
 
@@ -89,19 +73,10 @@ const getChampionStats = async (
   const stats = calculateChampionStats(playerGames);
 
   // 4. Save/Update champion stats in MongoDB
-  const updatedChampionStats = await Champion.findOneAndUpdate(
-    {
-      summoner: dbSummoner._id,
-      queueType: queueType,
-    },
-    {
-      $set: {
-        championStats: stats,
-        updatedAt: new Date(),
-      },
-    },
-    // Create if not exists, return the new document
-    { upsert: true, new: true }
+  const updatedChampionStats = await championDbService.saveChampionStats(
+    dbSummoner._id,
+    queueType,
+    stats
   );
 
   return { championStats: updatedChampionStats.championStats };
