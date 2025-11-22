@@ -16,7 +16,7 @@ var championsRouter = require("./routes/champions");
 var app = express();
 
 const cors = require("cors");
-app.use(cors({ origin: process.env.ORIGIN || "http://localhost:3000" }));
+app.use(cors({ origin: process.env.ORIGIN || "http://localhost:3001" }));
 
 app.use(logger("dev"));
 app.use(express.json());
