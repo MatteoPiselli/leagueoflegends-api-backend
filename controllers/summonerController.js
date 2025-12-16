@@ -5,9 +5,14 @@ const summonerService = require("../services/summoner/summonerService");
  */
 exports.searchSummoner = async (req, res) => {
   const { username, tagline } = req.params;
+  const { updateClicked } = req.query;
 
   try {
-    const result = await summonerService.searchSummoner(username, tagline);
+    const result = await summonerService.searchSummoner(
+      username,
+      tagline,
+      updateClicked === "true"
+    );
     res.json(result);
   } catch (error) {
     const statusCode = error.statusCode || 500;
