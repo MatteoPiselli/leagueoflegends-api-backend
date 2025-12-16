@@ -9,19 +9,27 @@ const { formatMatch } = require("../match/utils/formatMatch");
  * @returns {Object} Match history with match IDs
  */
 const getMatchHistory = async (puuid, forceUpdate = false) => {
+  // Always fetch recent matches from API to check for new matches
+  const apiMatchIds = await matchApiService.fetchMatchHistory(puuid, 0, 5);
+
   if (!forceUpdate) {
+    // If not forcing update, check DB first
     const dbMatches = await matchDbService.findRecentMatchesByPuuid(puuid, 5);
     if (dbMatches.length > 0) {
-      const matchIds = dbMatches.map((match) => match.matchId);
-      return { matchs: matchIds };
+      const dbMatchIds = dbMatches.map((match) => match.matchId);
+
+      // Check if there are new matches by comparing API and DB
+      const newMatchIds = apiMatchIds.filter((id) => !dbMatchIds.includes(id));
+
+      // If no new matches, return cached data
+      if (newMatchIds.length === 0) {
+        return { matchs: dbMatchIds.slice(0, 5) };
+      }
     }
   }
-  const matchsHistoryData = await matchApiService.fetchMatchHistory(
-    puuid,
-    0,
-    5
-  );
-  return { matchs: matchsHistoryData };
+
+  // Return matches from API (either forceUpdate or new matches detected)
+  return { matchs: apiMatchIds };
 };
 
 /**
