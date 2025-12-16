@@ -27,10 +27,13 @@ const getMasteries = async (puuid, forceUpdate = false) => {
     }
   }
 
-  // 3. Get masteries data from Riot API
+  // 3. Delete all existing masteries to ensure only top 3 are kept (always, not just on forceUpdate)
+  await masteryDbService.deleteMasteries(dbSummoner._id);
+
+  // 4. Get masteries data from Riot API (top 3)
   const masteriesData = await masteryApiService.fetchMasteriesByPuuid(puuid);
 
-  // 4. Save/Update each mastery in MongoDB
+  // 5. Save each mastery in MongoDB
   const masteries = [];
   for (const masteryData of masteriesData) {
     const savedMastery = await masteryDbService.saveOrUpdateMastery(
