@@ -15,6 +15,7 @@ describe("summonerController.searchSummoner", () => {
   beforeEach(() => {
     req = {
       params: { username: "testuser", tagline: "EUW" },
+      query: { updateClicked: "false" },
     };
     res = mockRes();
     jest.clearAllMocks();
@@ -30,7 +31,25 @@ describe("summonerController.searchSummoner", () => {
 
     expect(summonerService.searchSummoner).toHaveBeenCalledWith(
       "testuser",
-      "EUW"
+      "EUW",
+      false
+    );
+    expect(res.json).toHaveBeenCalledWith(mockResult);
+  });
+
+  it("should set forceUpdate to true if updateClicked is 'true'", async () => {
+    req.query = { updateClicked: "true" };
+    const mockResult = { summoner: { puuid: "abc", username: "testuser" } };
+    jest
+      .spyOn(summonerService, "searchSummoner")
+      .mockResolvedValueOnce(mockResult);
+
+    await searchSummoner(req, res);
+
+    expect(summonerService.searchSummoner).toHaveBeenCalledWith(
+      "testuser",
+      "EUW",
+      true
     );
     expect(res.json).toHaveBeenCalledWith(mockResult);
   });
@@ -45,6 +64,11 @@ describe("summonerController.searchSummoner", () => {
 
     await searchSummoner(req, res);
 
+    expect(summonerService.searchSummoner).toHaveBeenCalledWith(
+      "testuser",
+      "EUW",
+      false
+    );
     expect(res.status).toHaveBeenCalledWith(404);
     expect(res.json).toHaveBeenCalledWith({ error: "Not found" });
     expect(consoleSpy).toHaveBeenCalledWith(
