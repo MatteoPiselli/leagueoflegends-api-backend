@@ -7,16 +7,19 @@ const summonerApiService = require("./summonerApiService");
  * Update profileIconId and level if the player is already present
  * @param {string} username - Player's username (gameName)
  * @param {string} tagline - Player's tagline
+ * @param {boolean} forceUpdate - Whether to force update from Riot API
  * @returns {Object} Summoner data
  */
-const searchSummoner = async (username, tagline) => {
-  // 1. Check if we have summoner in database first
-  const existingSummoner = await summonerDbService.findSummonerByNameAndTag(
-    username,
-    tagline
-  );
-  if (existingSummoner) {
-    return { summoner: existingSummoner };
+const searchSummoner = async (username, tagline, forceUpdate = false) => {
+  // 1. Check if we have summoner in database first (unless forceUpdate is true)
+  if (!forceUpdate) {
+    const existingSummoner = await summonerDbService.findSummonerByNameAndTag(
+      username,
+      tagline
+    );
+    if (existingSummoner) {
+      return { summoner: existingSummoner };
+    }
   }
 
   // 2. Get PUUID from Riot ID
