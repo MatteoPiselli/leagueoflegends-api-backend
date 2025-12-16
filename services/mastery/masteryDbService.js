@@ -32,7 +32,17 @@ async function saveOrUpdateMastery(summonerId, masteryData) {
   );
 }
 
+/**
+ * Delete all masteries for a summoner
+ * @param {string} summonerId
+ * @returns {Object}
+ */
+async function deleteMasteries(summonerId) {
+  return await Mastery.deleteMany({ summoner: summonerId });
+}
+
 module.exports = {
   findMasteries,
   saveOrUpdateMastery,
+  deleteMasteries,
 };
