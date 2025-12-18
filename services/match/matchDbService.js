@@ -5,8 +5,8 @@ const Match = require("../../database/models/match");
  * @param {string} matchId
  * @returns {Object|null}
  */
-async function findMatchById(matchId) {
-  return await Match.findOne({ matchId });
+function findMatchById(matchId) {
+  return Match.findOne({ matchId });
 }
 
 /**
@@ -15,8 +15,8 @@ async function findMatchById(matchId) {
  * @param {number} limit
  * @returns {Array}
  */
-async function findRecentMatchesByPuuid(puuid, limit = 5) {
-  return await Match.find({ "participants.puuid": puuid })
+function findRecentMatchesByPuuid(puuid, limit = 5) {
+  return Match.find({ "participants.puuid": puuid })
     .sort({ gameCreation: -1 })
     .limit(limit)
     .select("matchId");
@@ -27,9 +27,9 @@ async function findRecentMatchesByPuuid(puuid, limit = 5) {
  * @param {Object} matchData
  * @returns {Object}
  */
-async function saveMatch(matchData) {
+function saveMatch(matchData) {
   const newMatch = new Match(matchData);
-  return await newMatch.save();
+  return newMatch.save();
 }
 
 module.exports = {

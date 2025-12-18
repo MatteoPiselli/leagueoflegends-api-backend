@@ -5,8 +5,8 @@ const { getMasteriesByPuuid } = require("../../api/masteriesApi");
  * @param {string} puuid
  * @returns {Array}
  */
-async function fetchMasteriesByPuuid(puuid) {
-  return await getMasteriesByPuuid(puuid);
+function fetchMasteriesByPuuid(puuid) {
+  return getMasteriesByPuuid(puuid);
 }
 
 module.exports = {

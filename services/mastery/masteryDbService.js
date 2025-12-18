@@ -5,8 +5,8 @@ const Mastery = require("../../database/models/mastery");
  * @param {string} summonerId
  * @returns {Array}
  */
-async function findMasteries(summonerId) {
-  return await Mastery.find({ summoner: summonerId });
+function findMasteries(summonerId) {
+  return Mastery.find({ summoner: summonerId });
 }
 
 /**
@@ -15,8 +15,8 @@ async function findMasteries(summonerId) {
  * @param {Object} masteryData
  * @returns {Object}
  */
-async function saveOrUpdateMastery(summonerId, masteryData) {
-  return await Mastery.findOneAndUpdate(
+function saveOrUpdateMastery(summonerId, masteryData) {
+  return Mastery.findOneAndUpdate(
     {
       summoner: summonerId,
       championId: masteryData.championId,
@@ -37,8 +37,8 @@ async function saveOrUpdateMastery(summonerId, masteryData) {
  * @param {string} summonerId
  * @returns {Object}
  */
-async function deleteMasteries(summonerId) {
-  return await Mastery.deleteMany({ summoner: summonerId });
+function deleteMasteries(summonerId) {
+  return Mastery.deleteMany({ summoner: summonerId });
 }
 
 module.exports = {

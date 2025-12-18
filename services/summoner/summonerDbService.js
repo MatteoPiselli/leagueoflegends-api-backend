@@ -6,8 +6,8 @@ const Summoner = require("../../database/models/summoner");
  * @param {string} tagline
  * @returns {Object}
  */
-async function findSummonerByNameAndTag(username, tagline) {
-  return await Summoner.findOne({ username, tagline });
+function findSummonerByNameAndTag(username, tagline) {
+  return Summoner.findOne({ username, tagline });
 }
 
 /**
@@ -15,8 +15,8 @@ async function findSummonerByNameAndTag(username, tagline) {
  * @param {string} puuid
  * @returns {Object}
  */
-async function findSummonerByPuuid(puuid) {
-  return await Summoner.findOne({ puuid });
+function findSummonerByPuuid(puuid) {
+  return Summoner.findOne({ puuid });
 }
 
 /**
@@ -25,8 +25,8 @@ async function findSummonerByPuuid(puuid) {
  * @param {Object} data
  * @returns {Object}
  */
-async function saveOrUpdateSummoner(puuid, data) {
-  return await Summoner.findOneAndUpdate(
+function saveOrUpdateSummoner(puuid, data) {
+  return Summoner.findOneAndUpdate(
     { puuid },
     {
       $set: {

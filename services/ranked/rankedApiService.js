@@ -5,8 +5,8 @@ const { getRankedByPuuid } = require("../../api/rankedApi");
  * @param {string} puuid
  * @returns {Object}
  */
-async function fetchRankedByPuuid(puuid) {
-  return await getRankedByPuuid(puuid);
+function fetchRankedByPuuid(puuid) {
+  return getRankedByPuuid(puuid);
 }
 
 module.exports = {

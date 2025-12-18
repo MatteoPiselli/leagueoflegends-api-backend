@@ -6,8 +6,8 @@ const { getRiotId, getSummonerByPuuid } = require("../../api/summonerApi");
  * @param {string} tagline
  * @returns {Object}
  */
-async function fetchRiotId(username, tagline) {
-  return await getRiotId(username, tagline);
+function fetchRiotId(username, tagline) {
+  return getRiotId(username, tagline);
 }
 
 /**
@@ -15,8 +15,8 @@ async function fetchRiotId(username, tagline) {
  * @param {string} puuid
  * @returns {Object}
  */
-async function fetchSummonerByPuuid(puuid) {
-  return await getSummonerByPuuid(puuid);
+function fetchSummonerByPuuid(puuid) {
+  return getSummonerByPuuid(puuid);
 }
 
 module.exports = {

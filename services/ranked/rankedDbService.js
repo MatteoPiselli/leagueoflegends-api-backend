@@ -5,8 +5,8 @@ const Ranked = require("../../database/models/ranked");
  * @param {string} summonerId
  * @returns {Object}
  */
-async function findRanked(summonerId) {
-  return await Ranked.findOne({ summoner: summonerId });
+function findRanked(summonerId) {
+  return Ranked.findOne({ summoner: summonerId });
 }
 
 /**
@@ -15,8 +15,8 @@ async function findRanked(summonerId) {
  * @param {Object} rankedData
  * @returns {Object}
  */
-async function saveOrUpdateRanked(summonerId, rankedData) {
-  return await Ranked.findOneAndUpdate(
+function saveOrUpdateRanked(summonerId, rankedData) {
+  return Ranked.findOneAndUpdate(
     { summoner: summonerId },
     {
       $set: {
