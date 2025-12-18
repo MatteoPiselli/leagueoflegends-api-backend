@@ -1,5 +1,5 @@
-// Utility function for rate limiting or async waits
-async function delay(ms) {
+// Utility function for rate limiting
+function delay(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
