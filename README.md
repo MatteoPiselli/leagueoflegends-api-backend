@@ -23,7 +23,7 @@ API REST backend pour **SummonerFinder.gg**, une application d'agrégation de st
 
 ```bash
 # Cloner le repository
-git clone <repository-url>
+git clone https://github.com/MatteoPiselli/leagueoflegends-api-backend.git
 cd leagueoflegends-api-backend
 
 # Installer les dépendances
