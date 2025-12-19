@@ -14,16 +14,16 @@ REST API backend for **SummonerFinder.gg**, a League of Legends stats aggregator
 
 ## 📋 Prerequisites
 
-- **Node.js** 14+
-- **MongoDB** (local or Atlas)
-- **Riot Games API Key** ([get a key](https://developer.riotgames.com/))
-- **Yarn** (recommended) or npm
+- **Node.js** 22+
+- **MongoDB** (local ou Atlas)
+- **Clé API Riot Games** ([obtenir une clé](https://developer.riotgames.com/))
+- **Yarn** (recommandé) ou npm
 
 ## 🚀 Installation
 
 ```bash
-# Clone the repository
-git clone <repository-url>
+# Cloner le repository
+git clone https://github.com/MatteoPiselli/leagueoflegends-api-backend.git
 cd leagueoflegends-api-backend
 
 # Install dependencies
@@ -237,9 +237,9 @@ Proprietary - Matteo Piselli.
 
 ## 👨‍💻 Author
 
-**Matteo Piselli** - [@votre-github](https://github.com/votre-github)
+**Matteo Piselli** - [MatteoPiselli](https://github.com/MatteoPiselli)
 
 Project developed as part of my full-stack developer portfolio.
 
-- Portfolio: [matteopiselli.dev](https://matteopiselli.dev)
-- LinkedIn: [Your Profile](https://linkedin.com/in/votre-profil)
+- Portfolio : [matteopiselli.dev](https://matteopiselli.dev)
+- LinkedIn : [Matteo Piselli 💻📱](https://www.linkedin.com/in/matteo-piselli/)
