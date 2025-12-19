@@ -1,38 +1,38 @@
 # 🎮 SummonerFinder.gg - Backend API
 
-API REST backend pour **SummonerFinder.gg**, une application d'agrégation de statistiques League of Legends. Construit avec Express.js et MongoDB, cette API sert de passerelle entre l'API Riot Games et le frontend, avec mise en cache intelligente des données.
+REST API backend for **SummonerFinder.gg**, a League of Legends stats aggregator application. Built with Express.js and MongoDB, this API serves as a gateway between the Riot Games API and the frontend, with intelligent data caching.
 
-## 🌟 Fonctionnalités
+## 🌟 Features
 
-- **Recherche de joueurs** - Récupération des informations de compte via username/tagline
-- **Statistiques ranked** - Classements Solo/Duo et Flex avec détails
-- **Historique de matchs** - Récupération et stockage des parties récentes
-- **Champion mastery** - Niveaux de maîtrise et points par champion
-- **Statistiques de champions** - KDA, winrate et performances par champion et mode de jeu
-- **Rate limiting intelligent** - Gestion automatique des limites de l'API Riot (20 req/sec, 100 req/2min)
-- **Cache MongoDB** - Réduction des appels API et amélioration des performances
+- **Player Search** - Retrieve account information via username/tagline
+- **Ranked Statistics** - Solo/Duo and Flex rankings with details
+- **Match History** - Fetch and store recent matches
+- **Champion Mastery** - Mastery levels and points per champion
+- **Champion Statistics** - KDA, winrate and performance by champion and game mode
+- **Intelligent Rate Limiting** - Automatic management of Riot API limits (20 req/sec, 100 req/2min)
+- **MongoDB Cache** - Reduced API calls and improved performance
 
-## 📋 Prérequis
+## 📋 Prerequisites
 
 - **Node.js** 14+
-- **MongoDB** (local ou Atlas)
-- **Clé API Riot Games** ([obtenir une clé](https://developer.riotgames.com/))
-- **Yarn** (recommandé) ou npm
+- **MongoDB** (local or Atlas)
+- **Riot Games API Key** ([get a key](https://developer.riotgames.com/))
+- **Yarn** (recommended) or npm
 
 ## 🚀 Installation
 
 ```bash
-# Cloner le repository
+# Clone the repository
 git clone <repository-url>
 cd leagueoflegends-api-backend
 
-# Installer les dépendances
+# Install dependencies
 yarn install
 ```
 
 ## ⚙️ Configuration
 
-Créez un fichier `.env` à la racine avec les variables suivantes :
+Create a `.env` file at the root with the following variables:
 
 ```env
 # Riot Games API
@@ -45,90 +45,89 @@ CONNECTION_STRING=mongodb+srv://<user>:<password>@<cluster>/<your_collection_nam
 ORIGIN=http://localhost:3001
 ```
 
-### Variables d'environnement
+### Environment Variables
 
-| Variable            | Description                        | Défaut                  |
-| ------------------- | ---------------------------------- | ----------------------- |
-| `RIOT_API_KEY`      | Clé API Riot Games (requise)       | -                       |
-| `CONNECTION_STRING` | URI de connexion MongoDB (requise) | -                       |
-| `ORIGIN`            | URL du frontend pour CORS          | `http://localhost:3001` |
+| Variable            | Description                       | Default                 |
+| ------------------- | --------------------------------- | ----------------------- |
+| `RIOT_API_KEY`      | Riot Games API Key (required)     | -                       |
+| `CONNECTION_STRING` | MongoDB connection URI (required) | -                       |
+| `ORIGIN`            | Frontend URL for CORS             | `http://localhost:3001` |
 
-## 🎯 Démarrage
+## 🎯 Getting Started
 
-### Mode développement (avec auto-reload)
+### Development mode (with auto-reload)
 
 ```bash
 yarn nodemon
 ```
 
-### Mode production
+### Production mode
 
 ```bash
 yarn start
 ```
 
-Le serveur démarre sur `http://localhost:3000` par défaut.
+The server starts on `http://localhost:3000` by default.
 
 ## 🧪 Tests
 
 ```bash
-# Exécuter tous les tests
+# Run all tests
 yarn test
 
-# Mode watch (développement)
+# Watch mode (development)
 yarn test --watch
-
-# Tester un fichier spécifique
+# Test a specific file
 yarn test summonerApi
 
-# Tests avec couverture
+# Tests with coverage
 yarn test --coverage
 ```
 
-Voir [tests/README.md](./tests/README.md) pour plus de détails sur l'architecture des tests.
+See [tests/README.md](./tests/README.md) for more details on test architecture.
 
-## 📁 Structure du projet
+## 📁 Project Structure
 
 ```
 leagueoflegends-api-backend/
-├── api/                    # Fonctions d'appel à l'API Riot Games
-│   ├── summonerApi.js     # Récupération des infos joueur
-│   ├── rankedApi.js       # Données de classement
-│   ├── matchApi.js        # Historique de matchs
+├── api/                    # Riot Games API call functions
+│   ├── summonerApi.js     # Player info retrieval
+│   ├── rankedApi.js       # Ranking data
+│   ├── matchApi.js        # Match history
 │   ├── masteriesApi.js    # Champion mastery
-│   └── championApi.js     # Statistiques de champions
-├── controllers/            # Contrôleurs Express (logique HTTP)
-├── services/               # Logique métier (3 sous-couches)
+│   └── championApi.js     # Champion statistics
+├── controllers/            # Express controllers (HTTP logic)
+├── services/               # Business logic (3 sub-layers)
 │   └── <feature>/
-│       ├── <feature>Service.js      # Orchestration API + DB
-│       ├── <feature>ApiService.js   # Wrapper API Riot
-│       └── <feature>DbService.js    # Opérations MongoDB
+│       ├── <feature>Service.js      # API + DB orchestration
+│       ├── <feature>ApiService.js   # Riot API wrapper
+│       └── <feature>DbService.js    # MongoDB operations
 ├── database/
-│   ├── connection.js      # Configuration MongoDB
-│   └── models/            # Schémas Mongoose
-├── routes/                # Définition des routes Express
-├── tests/                 # Tests unitaires et d'intégration
-├── utils/                 # Utilitaires (rate limiting, delay)
-└── app.js                 # Configuration Express
+│   ├── connection.js      # MongoDB configuration
+│   └── models/            # Mongoose schemas
+├── routes/                # Express route definitions
+├── tests/                 # Unit and integration tests
+├── utils/                 # Utilities (rate limiting, delay)
+└── app.js                 # Express configuration
 ```
 
-## 🔗 Endpoints API
+## 🔗 API Endpoints
 
-### Joueurs
+### Players
 
 ```
 GET /api/summoner/:username/:tagline
-    ?updateClicked=true  # Force la mise à jour depuis Riot API
+    ?updateClicked=true  # Force update from Riot API
 ```
 
-### Statistiques Ranked
+### Ranked Statistics
 
 ```
 GET /api/ranked/:puuid
     ?updateClicked=true
 ```
 
-### Historique de matchs
+### Match History
 
 ```
 GET /api/matchs/:puuid
@@ -144,7 +143,7 @@ GET /api/masteries/:puuid
     ?updateClicked=true
 ```
 
-### Statistiques de champions
+### Champion Statistics
 
 ```
 GET /api/champions/:puuid/stats
@@ -154,93 +153,93 @@ GET /api/champions/:puuid/stats
 
 ## 🏗️ Architecture
 
-### Pattern 3-couches
+### 3-Layer Pattern
 
 ```
 Routes → Controllers → Services → Database/API Riot
 ```
 
-### Services (Pattern critique)
+### Services (Critical Pattern)
 
-Chaque feature a **3 fichiers de service** :
+Each feature has **3 service files**:
 
-1. **`<feature>Service.js`** - Orchestration (coordonne API + DB)
-2. **`<feature>ApiService.js`** - Appels à l'API Riot
-3. **`<feature>DbService.js`** - Opérations MongoDB
+1. **`<feature>Service.js`** - Orchestration (coordinates API + DB)
+2. **`<feature>ApiService.js`** - Riot API calls
+3. **`<feature>DbService.js`** - MongoDB operations
 
-**Exemple de flux** :
+**Flow example**:
 
 ```javascript
-// 1. Vérifier MongoDB d'abord
+// 1. Check MongoDB first
 const cached = await dbService.find(puuid);
 if (cached) return cached;
 
-// 2. Sinon, appeler l'API Riot
+// 2. Otherwise, call Riot API
 const data = await apiService.fetch(puuid);
 
-// 3. Sauvegarder en cache
+// 3. Save to cache
 await dbService.save(data);
 
-// 4. Retourner le résultat
+// 4. Return result
 return data;
 ```
 
-### Gestion du Rate Limiting
+### Rate Limiting Management
 
-L'API Riot impose des limites strictes :
+The Riot API enforces strict limits:
 
-- **20 requêtes/seconde**
-- **100 requêtes/2 minutes**
+- **20 requests/second**
+- **100 requests/2 minutes**
 
-Utilisez `utils/riotRateLimit.js` pour les opérations par lot :
+Use `utils/riotRateLimit.js` for batch operations:
 
 ```javascript
 const { riotRateLimit } = require("./utils/riotRateLimit");
 
-// Traite automatiquement 20 req/sec avec pause après 100 req
+// Automatically handles 20 req/sec with pause after 100 req
 const results = await riotRateLimit(matchIds);
 ```
 
-## 🌐 Déploiement
+## 🌐 Deployment
 
 ### Vercel
 
-Le projet est configuré pour Vercel via `vercel.json` :
+The project is configured for Vercel via `vercel.json`:
 
-**Variables d'environnement** : Configurez `RIOT_API_KEY`, `CONNECTION_STRING` et `ORIGIN` dans le dashboard Vercel.
+**Environment Variables**: Configure `RIOT_API_KEY`, `CONNECTION_STRING` and `ORIGIN` in the Vercel dashboard.
 
 ## 🛠️ Technologies
 
-- **Express.js** 4.16 - Framework web
-- **Mongoose** 8.18 - ODM MongoDB
-- **dotenv** - Gestion des variables d'environnement
+- **Express.js** 4.16 - Web framework
+- **Mongoose** 8.18 - MongoDB ODM
+- **dotenv** - Environment variable management
 - **cors** - Cross-origin support
-- **Jest** 30.2 - Framework de tests
-- **Supertest** - Tests HTTP
-- **Nodemon** - Auto-reload en développement
+- **Jest** 30.2 - Testing framework
+- **Supertest** - HTTP testing
+- **Nodemon** - Auto-reload in development
 
-## 📚 Documentation complémentaire
+## 📚 Additional Documentation
 
-- [Tests Documentation](./tests/README.md) - Architecture et patterns des tests
-- [Copilot Instructions](./.github/copilot-instructions.md) - Guide pour agents IA
+- [Tests Documentation](./tests/README.md) - Test architecture and patterns
+- [Copilot Instructions](./.github/copilot-instructions.md) - Guide for AI agents
 
-## 🤝 Intégration Frontend
+## 🤝 Frontend Integration
 
-Ce backend est conçu pour fonctionner avec le frontend **SummonerFinder.gg** :
+This backend is designed to work with the **SummonerFinder.gg** frontend:
 
-- Frontend écoute sur port `3001` par défaut
-- Backend écoute sur port `3000` par défaut
-- CORS configuré automatiquement via `ORIGIN`
+- Frontend listens on port `3001` by default
+- Backend listens on port `3000` by default
+- CORS automatically configured via `ORIGIN`
 
 ## 📄 License
 
-Propriétaire - Matteo Piselli.
+Proprietary - Matteo Piselli.
 
-## 👨‍💻 Auteur
+## 👨‍💻 Author
 
 **Matteo Piselli** - [@votre-github](https://github.com/votre-github)
 
-Projet développé dans le cadre de mon portfolio de développeur full stack.
+Project developed as part of my full-stack developer portfolio.
 
-- Portfolio : [matteopiselli.dev](https://matteopiselli.dev)
-- LinkedIn : [Votre Profil](https://linkedin.com/in/votre-profil)
+- Portfolio: [matteopiselli.dev](https://matteopiselli.dev)
+- LinkedIn: [Your Profile](https://linkedin.com/in/votre-profil)
