@@ -28,9 +28,14 @@ tests/
 │           ├── summoner.test.js
 │           ├── match.test.js
 │           └── ranked.test.js
-└── integration/                       # Integration tests (WIP)
+└── integration/                       # Integration tests
     ├── app.test.js                    # Full application tests
-    └── routes/                        # HTTP route tests (empty for now)
+    └── routes/                        # HTTP route tests
+        ├── champion.test.js
+        ├── masteries.test.js
+        ├── matchs.test.js
+        ├── ranked.test.js
+        └── summoner.test.js
 ```
 
 ## 🎯 Test Types
@@ -62,7 +67,12 @@ Test **Mongoose models**:
 
 ### 4. **Integration Tests** (`integration/`)
 
-End-to-end tests (currently in development).
+End-to-end tests for HTTP routes:
+
+- Test full request/response cycle
+- Verify route handlers with real controllers
+- Test middleware integration
+- Validate HTTP status codes and response formats
 
 ## 🛠️ Configuration
 
