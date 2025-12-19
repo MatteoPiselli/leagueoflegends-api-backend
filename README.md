@@ -14,7 +14,7 @@ API REST backend pour **SummonerFinder.gg**, une application d'agrégation de st
 
 ## 📋 Prérequis
 
-- **Node.js** 14+
+- **Node.js** 22+
 - **MongoDB** (local ou Atlas)
 - **Clé API Riot Games** ([obtenir une clé](https://developer.riotgames.com/))
 - **Yarn** (recommandé) ou npm
@@ -238,9 +238,9 @@ Propriétaire - Matteo Piselli.
 
 ## 👨‍💻 Auteur
 
-**Matteo Piselli** - [@votre-github](https://github.com/votre-github)
+**Matteo Piselli** - [MatteoPiselli](https://github.com/MatteoPiselli)
 
 Projet développé dans le cadre de mon portfolio de développeur full stack.
 
 - Portfolio : [matteopiselli.dev](https://matteopiselli.dev)
-- LinkedIn : [Votre Profil](https://linkedin.com/in/votre-profil)
+- LinkedIn : [Matteo Piselli 💻📱](https://www.linkedin.com/in/matteo-piselli/)
