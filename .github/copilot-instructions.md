@@ -51,6 +51,7 @@ if (!response.ok) {
 
 - `RIOT_API_KEY` - Riot Games API key
 - `CONNECTION_STRING` - MongoDB connection URI
+- `ORIGIN` - Frontend URL for CORS (defaults to `http://localhost:3001`)
 
 **Note**: Database connection in `database/connection.js` auto-closes on SIGINT.
 
@@ -158,9 +159,11 @@ All models have indexes on primary lookup fields (e.g., `puuid` in `database/mod
 ### Starting the server
 
 ```bash
-yarn start       # Production mode
-# OR use nodemon for dev (add to package.json if needed)
+yarn start       # Production mode (node ./bin/www)
+yarn nodemon     # Development mode with auto-reload
 ```
+
+**Note**: Server runs on port 3000 by default (`bin/www`).
 
 ### Running tests
 
@@ -199,6 +202,22 @@ Enabled globally in `app.js` with `app.use(cors())`
 - Models: singular lowercase (e.g., `models/summoner.js`)
 - Tests: `<filename>.test.js`
 
+## Deployment
+
+### Vercel Configuration
+
+Project is configured for Vercel deployment with `vercel.json`:
+
+```json
+{
+  "version": 2,
+  "builds": [{ "src": "app.js", "use": "@vercel/node" }],
+  "routes": [{ "src": "/(.*)", "dest": "app.js" }]
+}
+```
+
+**CORS**: Configured in `app.js` to accept requests from `process.env.ORIGIN` (frontend URL).
+
 ## Key Dependencies
 
 - **express** - Web framework
@@ -206,3 +225,4 @@ Enabled globally in `app.js` with `app.use(cors())`
 - **dotenv** - Environment variables
 - **cors** - Cross-origin support
 - **jest** + **supertest** - Testing
+- **nodemon** - Development auto-reload
